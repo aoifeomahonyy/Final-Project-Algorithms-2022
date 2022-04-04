@@ -2,46 +2,23 @@
 public class BusStops {
 
 	public int stop_id;
-	public int stop_code;
+	public String stop_code;
 	public String stop_name;
 	public String stop_desc;
 	public double stop_lat;
 	public double stop_lon;
 	public String zone_id;
-	public String stop_url;
 
 	BusStops(String input) {
 
 		String[] inputVals = input.split(",");
-		try {
-			this.stop_id = Integer.parseInt(inputVals[0]);
-		} catch (Exception e) {
-			this.stop_id = -1;
-		}
-
-		try {
-			this.stop_code = Integer.parseInt(inputVals[1]);
-		} catch (Exception e) {
-			this.stop_id = -1;
-		}
-
-		this.stop_name = changeStopNames(inputVals[3]);
-		this.stop_desc = inputVals[4];
-
-		try {
-			this.stop_lat = Integer.parseInt(inputVals[5]);
-		} catch (Exception e) {
-			this.stop_id = -1;
-		}
-
-		try {
-			this.stop_lon = Integer.parseInt(inputVals[6]);
-		} catch (Exception e) {
-			this.stop_id = -1;
-		}
-
-		this.zone_id = inputVals[7];
-		this.stop_url = inputVals[8];
+		this.stop_id = Integer.parseInt(inputVals[0]);
+		this.stop_code = inputVals[1];
+		this.stop_name = changeStopNames(inputVals[2]);
+		this.stop_desc = inputVals[3];
+		this.stop_lat = Double.parseDouble(inputVals[4]);
+		this.stop_lon = Double.parseDouble(inputVals[5]);
+		this.zone_id = inputVals[6];
 	}
 
 	/*
@@ -50,7 +27,7 @@ public class BusStops {
 	 * names of the stops when reading the file into a TST (eg “WB HASTINGS ST FS
 	 * HOLDOM AVE” becomes “HASTINGS ST FS HOLDOM AVE WB”)
 	 */
-	public String changeStopNames(String input) {
+	public static String changeStopNames(String input) {
 		// for 'WB'
 		if (input.charAt(0) == 'W' && input.charAt(1) == 'B' && input.charAt(2) == ' ') {
 			return input.substring(3) + " WB";
@@ -84,7 +61,7 @@ public class BusStops {
 	}
 
 	public String returnStopCode() {
-		return "" + this.stop_code;
+		return this.stop_code;
 	}
 
 	public String returnStopName() {
@@ -105,10 +82,6 @@ public class BusStops {
 
 	public String returnZoneId() {
 		return this.zone_id;
-	}
-
-	public String returnStopUrl() {
-		return this.stop_url;
 	}
 
 }
