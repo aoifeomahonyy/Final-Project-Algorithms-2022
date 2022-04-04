@@ -29,12 +29,38 @@ public class FrontInterface {
 			}
 			else if(userInput.equals("2"))
 			{
-				System.out.println("Type your bus stop name (or just the first few characters): ");
+				System.out.println("Type your bus stop name: ");
 				Scanner scanner2 = new Scanner(System.in);
 				String busStopInput = scanner2.nextLine();
+				String [] busStopInfo = new String[7];
+				for(int i = 0; i < busStops.size(); i++)
+				{
+					if(busStopInput.equalsIgnoreCase(busStops.get(i).returnStopName()))
+					{
+						busStopInfo[0] = busStops.get(i).returnStopId();
+						busStopInfo[1] = busStops.get(i).returnStopCode();
+						busStopInfo[2] = busStops.get(i).returnStopName();
+						busStopInfo[3] = busStops.get(i).returnStopDesc();
+						busStopInfo[4] = busStops.get(i).returnStopLat();
+						busStopInfo[5] = busStops.get(i).returnStopLon();
+						busStopInfo[6] = busStops.get(i).returnZoneId();
+					}
+				}
+				String [] output = new String[7];
+				output[0] = "Stop Name: " + busStopInfo[2] + "\n";
+				output[1] = "Stop ID: " + busStopInfo[0] + "\n";
+				output[2] = "Stop Code: " + busStopInfo[1] + "\n";
+				output[3] = "Stop Desc: " + busStopInfo[3] + "\n";
+				output[4] = "Stop Latitude: " + busStopInfo[4] + "\n";
+				output[5] = "Stop Longitude: " + busStopInfo[5] + "\n";
+				output[6] = "Stop Zone ID: " + busStopInfo[6] + "\n";
 				
-				
+				for(int i = 0; i < output.length; i++)
+				{
+					System.out.println(output[i]);
+				}
 			}
+			
 		}
 		
 	}

@@ -9,8 +9,6 @@ public class BusStops {
 	public double stop_lon;
 	public String zone_id;
 	public String stop_url;
-	public String location_type;
-	public String parent_station;
 
 	BusStops(String input) {
 
@@ -44,8 +42,6 @@ public class BusStops {
 
 		this.zone_id = inputVals[7];
 		this.stop_url = inputVals[8];
-		this.location_type = inputVals[9];
-		this.parent_station = inputVals[10];
 	}
 
 	/*
@@ -115,11 +111,4 @@ public class BusStops {
 		return this.stop_url;
 	}
 
-	public String returnLocationtype() {
-		return this.location_type;
-	}
-
-	public String returnParentStation() {
-		return this.parent_station;
-	}
 }
