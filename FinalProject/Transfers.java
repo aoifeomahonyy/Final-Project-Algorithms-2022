@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.io.File;
 
 public class Transfers {
 	
@@ -13,4 +17,5 @@ public class Transfers {
 		this.transfer_type = transfer_type;
 		this.min_transfer_time = min_transfer_time;
 	}
+
 }
