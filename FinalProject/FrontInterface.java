@@ -14,6 +14,7 @@ public class FrontInterface {
 	public static void main(String[] args) throws FileNotFoundException {
 
 		readInStopsFile();
+		readInStopTimesFile();
 		Scanner scanner = new Scanner(System.in);
 		boolean exit = false;
 
@@ -70,7 +71,49 @@ public class FrontInterface {
 					} else {
 						System.out.print("Bus stop was not found. Please try again.");
 					}
-				} else {
+				} 
+				else if (userInput.equals("3")) {
+					
+					//removeInvalidTime();
+					System.out.print("Enter your arrival time in the format 'hh:mm:ss':");
+					if(scanner.hasNextLine()) {
+						String timeInput = scanner.nextLine();
+						String [] stopTimesInfo = new String[5];
+						int count = 1;
+						for(int i = 0; i < stopTimes.size(); i++)
+						{
+							if(timeInput.equals(stopTimes.get(i).returnArrivalTime())) {
+								System.out.print("Trip result number " + count + ":\n");
+								stopTimesInfo[0] = stopTimes.get(i).returnTripId();
+								stopTimesInfo[1] = stopTimes.get(i).returnArrivalTime();
+								stopTimesInfo[2] = stopTimes.get(i).returnDepTime();
+								stopTimesInfo[3] = stopTimes.get(i).returnStopId();
+								stopTimesInfo[4] = stopTimes.get(i).returnStopSequence();
+								//stopTimesInfo[5] = stopTimes.get(i).returnStopHeadsign();
+								//stopTimesInfo[6] = stopTimes.get(i).returnPickupType();
+								//stopTimesInfo[7] = stopTimes.get(i).returnDropoffType();
+								//stopTimesInfo[8] = stopTimes.get(i).returnShapeDistTravelled();
+								
+								String [] outputInfo = new String[5];
+								outputInfo[0] = "Specified Arrival Time: " + stopTimesInfo[1] + "\n";
+								outputInfo[1] = "Trip ID: " + stopTimesInfo[0] + "\n";
+								outputInfo[2] = "Departure Time: " + stopTimesInfo[2] + "\n";
+								outputInfo[3] = "Stop ID: " + stopTimesInfo[3] + "\n";
+								outputInfo[4] = "Stop Sequence: " + stopTimesInfo[4] + "\n";
+							//	outputInfo[5] = "Stop Headsign: " + stopTimesInfo[5];
+							//	outputInfo[6] = "Pickup Type: " + stopTimesInfo[6];
+							//	outputInfo[7] = "Dropoff Type: " + stopTimesInfo[7];
+							//	outputInfo[8] = "Shape Distance Travelled: " + stopTimesInfo[8];
+								
+								for(int j = 0; j < outputInfo.length; j++) {
+									System.out.println(outputInfo[j]);
+								}
+							}
+							count = count + 1;
+						}
+					}
+				}
+				else {
 					System.out.print("Error. Please enter 1, 2, 3 or exit!");
 				}
 			}
@@ -131,6 +174,24 @@ public class FrontInterface {
 			Iterable<String> results = ternarySearchTree.keysWithPrefix(busStops.get(i).returnStopName());
 			for(String s : results) {
 				System.out.println(s);
+			}
+		}
+	}
+	
+	public static void removeInvalidTime()
+	{
+		for(int i = 0; i < stopTimes.size(); i++) {
+			if(((stopTimes.get(i).arrival_time.charAt(0)=='0' || stopTimes.get(i).arrival_time.charAt(0)=='1') && (stopTimes.get(i).arrival_time.charAt(1)=='0'
+					|| stopTimes.get(i).arrival_time.charAt(1)=='1' || stopTimes.get(i).arrival_time.charAt(1)=='2' || stopTimes.get(i).arrival_time.charAt(1)
+					=='3' || stopTimes.get(i).arrival_time.charAt(1)=='4' || stopTimes.get(i).arrival_time.charAt(1)=='5' || 
+					stopTimes.get(i).arrival_time.charAt(1)=='6' || stopTimes.get(i).arrival_time.charAt(1)=='7' || stopTimes.get(i).arrival_time.charAt(1)
+					=='8' || stopTimes.get(i).arrival_time.charAt(1)=='9')) || (stopTimes.get(i).arrival_time.charAt(0)=='2' &&
+					(stopTimes.get(i).arrival_time.charAt(1)=='0' || stopTimes.get(i).arrival_time.charAt(1)=='1' || stopTimes.get(i).arrival_time.charAt(1)
+					=='2' || stopTimes.get(i).arrival_time.charAt(1)=='3' || stopTimes.get(i).arrival_time.charAt(1)=='4'))) {
+				
+			}
+			else {
+				stopTimes.remove(i);
 			}
 		}
 	}
