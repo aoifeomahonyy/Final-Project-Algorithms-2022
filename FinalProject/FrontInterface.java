@@ -8,12 +8,15 @@ public class FrontInterface {
 
 	public static ArrayList<BusStops> busStops = new ArrayList<BusStops>();
 	public static ArrayList<StopTimes> stopTimes = new ArrayList<StopTimes>();
+	public static TST<BusStops> ternarySearchTree = new TST<BusStops>();
+	public static ArrayList<BusStops> tstResults = new ArrayList<BusStops>();
 
-	public static void main(String[] args) throws FileNotFoundException{
+	public static void main(String[] args) throws FileNotFoundException {
 
 		readInStopsFile();
 		Scanner scanner = new Scanner(System.in);
 		boolean exit = false;
+
 		while (exit == false) {
 			System.out.println("\nWelcome to the Vancouver Public Transport System. \n");
 			System.out.println("Please choose an option, or exit the system by typing 'exit'. ");
@@ -24,16 +27,22 @@ public class FrontInterface {
 
 			if (scanner.hasNextLine()) {
 				String userInput = scanner.nextLine();
+
 				if (userInput.equalsIgnoreCase("exit")) {
 					exit = true;
 					System.out.println("You are now exiting the system. Thank you! ");
 					break;
+
 				} else if (userInput.equals("2")) {
 					System.out.println("Type your bus stop name: ");
 					if (scanner.hasNextLine()) {
-						String busStopInput = scanner.nextLine();
+						String input = scanner.nextLine();
+						String busStopInput = input.toUpperCase();
 						String[] busStopInfo = new String[7];
+						createResultsList(busStopInput);
+						
 						for (int i = 0; i < busStops.size(); i++) {
+
 							if (busStopInput.equals(busStops.get(i).returnStopName())) {
 								busStopInfo[0] = busStops.get(i).returnStopId();
 								busStopInfo[1] = busStops.get(i).returnStopCode();
@@ -43,27 +52,25 @@ public class FrontInterface {
 								busStopInfo[5] = busStops.get(i).returnStopLon();
 								busStopInfo[6] = busStops.get(i).returnZoneId();
 
-								String[] output = new String[7];
-								output[0] = "Stop Name: " + busStopInfo[2] + "\n";
-								output[1] = "Stop ID: " + busStopInfo[0] + "\n";
-								output[2] = "Stop Code: " + busStopInfo[1] + "\n";
-								output[3] = "Stop Desc: " + busStopInfo[3] + "\n";
-								output[4] = "Stop Latitude: " + busStopInfo[4] + "\n";
-								output[5] = "Stop Longitude: " + busStopInfo[5] + "\n";
-								output[6] = "Stop Zone ID: " + busStopInfo[6] + "\n";
+								String[] outputInfo = new String[7];
+								outputInfo[0] = "Stop Name: " + busStopInfo[2] + "\n";
+								outputInfo[1] = "Stop ID: " + busStopInfo[0] + "\n";
+								outputInfo[2] = "Stop Code: " + busStopInfo[1] + "\n";
+								outputInfo[3] = "Stop Desc: " + busStopInfo[3] + "\n";
+								outputInfo[4] = "Stop Latitude: " + busStopInfo[4] + "\n";
+								outputInfo[5] = "Stop Longitude: " + busStopInfo[5] + "\n";
+								outputInfo[6] = "Stop Zone ID: " + busStopInfo[6] + "\n";
 
-								for (int j = 0; j < output.length; j++) {
-									System.out.println(output[j]);
+								for (int j = 0; j < outputInfo.length; j++) {
+									System.out.println(outputInfo[j]);
 								}
 							}
 						}
 
-					}
-					else {
+					} else {
 						System.out.print("Bus stop was not found. Please try again.");
 					}
-				}
-				else {
+				} else {
 					System.out.print("Error. Please enter 1, 2, 3 or exit!");
 				}
 			}
@@ -104,12 +111,27 @@ public class FrontInterface {
 			e.printStackTrace();
 		}
 	}
-	public static boolean compareStrings(String str1, String str2)
-	{
-		boolean same = false;
-		if(str1 == str2) {
-			same = true;
+
+	public static String test(String input) {
+		String ans = "";
+		for (int i = 0; i < busStops.size(); i++) {
+			ternarySearchTree.put(input, busStops.get(i));
+			Iterable<String> result = ternarySearchTree.keysWithPrefix(busStops.get(i).returnStopName());
+			for (String s : result) {
+				ans += s + ternarySearchTree.get(s);
+			}
 		}
-		return same;
+		return ans;
+	}
+	public static void createResultsList(String userInput)
+	{
+		for(int i = 0; i < busStops.size(); i++)
+		{
+			ternarySearchTree.put(userInput, busStops.get(i));
+			Iterable<String> results = ternarySearchTree.keysWithPrefix(busStops.get(i).returnStopName());
+			for(String s : results) {
+				System.out.println(s);
+			}
+		}
 	}
 }
