@@ -9,7 +9,7 @@ public class BusStops {
 	public double stop_lon;
 	public String zone_id;
 
-	BusStops(String input) {
+	public BusStops(String input) {
 
 		String[] inputVals = input.split(",");
 		this.stop_id = Integer.parseInt(inputVals[0]);
@@ -23,34 +23,36 @@ public class BusStops {
 
 	/*
 	 * In order for this to provide meaningful search functionality please move
-	 * keywords flagstop, wb, nb, sb, eb from start of the names to the end of the
-	 * names of the stops when reading the file into a TST (eg “WB HASTINGS ST FS
-	 * HOLDOM AVE” becomes “HASTINGS ST FS HOLDOM AVE WB”)
+	 * keystopNames flagstop, wb, nb, sb, eb from start of the names to the end of
+	 * the names of the stops when reading the file into a TST (eg “WB HASTINGS ST
+	 * FS HOLDOM AVE” becomes “HASTINGS ST FS HOLDOM AVE WB”)
 	 */
-	public static String changeStopNames(String input) {
+	public String changeStopNames(String stopName) {
+
+		// for 'FLAGSTOP'
+		if (stopName.charAt(0) == 'F' && stopName.charAt(1) == 'L' && stopName.charAt(2) == 'A'
+				&& stopName.charAt(3) == 'G' && stopName.charAt(4) == 'S' && stopName.charAt(5) == 'T'
+				&& stopName.charAt(6) == 'O' && stopName.charAt(7) == 'P' && stopName.charAt(9) == ' ') {
+			stopName = stopName.substring(9);
+
+		}
 		// for 'WB'
-		if (input.charAt(0) == 'W' && input.charAt(1) == 'B' && input.charAt(2) == ' ') {
-			return input.substring(3) + " WB";
+		if (stopName.charAt(0) == 'W' && stopName.charAt(1) == 'B' && stopName.charAt(2) == ' ') {
+			return stopName.substring(3) + " WB";
 		}
 		// for 'NB'
-		if (input.charAt(0) == 'N' && input.charAt(1) == 'B' && input.charAt(2) == ' ') {
-			return input.substring(3) + " NB";
+		if (stopName.charAt(0) == 'N' && stopName.charAt(1) == 'B' && stopName.charAt(2) == ' ') {
+			return stopName.substring(3) + " NB";
 		}
 		// for 'SB'
-		if (input.charAt(0) == 'S' && input.charAt(1) == 'B' && input.charAt(2) == ' ') {
-			return input.substring(3) + " SB";
+		if (stopName.charAt(0) == 'S' && stopName.charAt(1) == 'B' && stopName.charAt(2) == ' ') {
+			return stopName.substring(3) + " SB";
 		}
 		// for 'EB'
-		if (input.charAt(0) == 'E' && input.charAt(1) == 'B' && input.charAt(2) == ' ') {
-			return input.substring(3) + " EB";
+		if (stopName.charAt(0) == 'E' && stopName.charAt(1) == 'B' && stopName.charAt(2) == ' ') {
+			return stopName.substring(3) + " EB";
 		}
-		// for 'FLAGSTOP'
-		if (input.charAt(0) == 'F' && input.charAt(1) == 'L' && input.charAt(2) == 'A' && input.charAt(3) == 'G'
-				&& input.charAt(4) == 'S' && input.charAt(5) == 'T' && input.charAt(6) == 'O'
-				&& input.charAt(7) == 'P') {
-			return input.substring(8) + " FLAGSTOP";
-		}
-		return input;
+		return stopName;
 	}
 
 	// Functions returning stop data for part 2 (making them all strings so that an
@@ -83,5 +85,7 @@ public class BusStops {
 	public String returnZoneId() {
 		return this.zone_id;
 	}
+	
+	
 
 }

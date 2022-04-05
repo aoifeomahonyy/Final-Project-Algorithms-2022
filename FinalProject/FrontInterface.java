@@ -9,7 +9,7 @@ public class FrontInterface {
 	public static ArrayList<BusStops> busStops = new ArrayList<BusStops>();
 	public static ArrayList<StopTimes> stopTimes = new ArrayList<StopTimes>();
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException{
 
 		readInStopsFile();
 		Scanner scanner = new Scanner(System.in);
@@ -27,13 +27,17 @@ public class FrontInterface {
 				if (userInput.equalsIgnoreCase("exit")) {
 					exit = true;
 					System.out.println("You are now exiting the system. Thank you! ");
+					break;
 				} else if (userInput.equals("2")) {
 					System.out.println("Type your bus stop name: ");
 					if (scanner.hasNextLine()) {
 						String busStopInput = scanner.nextLine();
+						if(compareStrings(busStopInput, busStops.get(1).returnStopName()) == true) {
+							System.out.print("Working");
+						}
 						String[] busStopInfo = new String[7];
 						for (int i = 0; i < busStops.size(); i++) {
-							if (busStopInput == (busStops.get(i).returnStopName())) {
+							if (busStopInput == busStops.get(i).returnStopName()) {
 								busStopInfo[0] = busStops.get(i).returnStopId();
 								busStopInfo[1] = busStops.get(i).returnStopCode();
 								busStopInfo[2] = busStops.get(i).returnStopName();
@@ -56,10 +60,15 @@ public class FrontInterface {
 								}
 								System.out.print(output[1]);
 							}
-
 						}
 
 					}
+					else {
+						System.out.print("Bus stop was not found. Please try again.");
+					}
+				}
+				else {
+					System.out.print("Error. Please enter 1, 2, 3 or exit!");
 				}
 			}
 		}
@@ -98,5 +107,13 @@ public class FrontInterface {
 			System.out.print("Error. This file could not be found");
 			e.printStackTrace();
 		}
+	}
+	public static boolean compareStrings(String str1, String str2)
+	{
+		boolean same = false;
+		if(str1 == str2) {
+			same = true;
+		}
+		return same;
 	}
 }
