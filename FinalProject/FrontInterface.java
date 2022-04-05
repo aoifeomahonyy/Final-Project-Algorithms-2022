@@ -32,12 +32,9 @@ public class FrontInterface {
 					System.out.println("Type your bus stop name: ");
 					if (scanner.hasNextLine()) {
 						String busStopInput = scanner.nextLine();
-						if(compareStrings(busStopInput, busStops.get(1).returnStopName()) == true) {
-							System.out.print("Working");
-						}
 						String[] busStopInfo = new String[7];
 						for (int i = 0; i < busStops.size(); i++) {
-							if (busStopInput == busStops.get(i).returnStopName()) {
+							if (busStopInput.equals(busStops.get(i).returnStopName())) {
 								busStopInfo[0] = busStops.get(i).returnStopId();
 								busStopInfo[1] = busStops.get(i).returnStopCode();
 								busStopInfo[2] = busStops.get(i).returnStopName();
@@ -47,18 +44,17 @@ public class FrontInterface {
 								busStopInfo[6] = busStops.get(i).returnZoneId();
 
 								String[] output = new String[7];
-								output[0] = "Stop Name: " + busStopInfo[2];
-								output[1] = "Stop ID: " + busStopInfo[0];
-								output[2] = "Stop Code: " + busStopInfo[1];
-								output[3] = "Stop Desc: " + busStopInfo[3];
-								output[4] = "Stop Latitude: " + busStopInfo[4];
-								output[5] = "Stop Longitude: " + busStopInfo[5];
-								output[6] = "Stop Zone ID: " + busStopInfo[6];
+								output[0] = "Stop Name: " + busStopInfo[2] + "\n";
+								output[1] = "Stop ID: " + busStopInfo[0] + "\n";
+								output[2] = "Stop Code: " + busStopInfo[1] + "\n";
+								output[3] = "Stop Desc: " + busStopInfo[3] + "\n";
+								output[4] = "Stop Latitude: " + busStopInfo[4] + "\n";
+								output[5] = "Stop Longitude: " + busStopInfo[5] + "\n";
+								output[6] = "Stop Zone ID: " + busStopInfo[6] + "\n";
 
 								for (int j = 0; j < output.length; j++) {
-									System.out.println(output[i]);
+									System.out.println(output[j]);
 								}
-								System.out.print(output[1]);
 							}
 						}
 
