@@ -3,14 +3,14 @@ import java.util.*;
 public class TST<Value> {
 
 	private int n;
-	private tstSearchNode<Value> root;
+	private tstSearchNode<String> root;
 
-	private static class tstSearchNode<Value> {
+	private static class tstSearchNode<String> {
 		private char character;
-		private tstSearchNode<Value> left;
-		private tstSearchNode<Value> mid;
-		private tstSearchNode<Value> right;
-		private Value value;
+		private tstSearchNode<String> left;
+		private tstSearchNode<String> mid;
+		private tstSearchNode<String> right;
+		private String value;
 
 	}
 
@@ -30,14 +30,14 @@ public class TST<Value> {
 		return get(key) != null;
 	}
 
-	public Value get(String key) {
+	public String get(String key) {
 		if (key == null) {
 			return null;
 		}
 		if (key.length() == 0) {
 			return null;
 		}
-		tstSearchNode<Value> x = get(root, key, 0);
+		tstSearchNode<String> x = get(root, key, 0);
 		if (x == null) {
 			return null;
 		}
@@ -45,7 +45,7 @@ public class TST<Value> {
 		return x.value;
 	}
 
-	private tstSearchNode<Value> get(tstSearchNode<Value> x, String key, int y) {
+	private tstSearchNode<String> get(tstSearchNode<String> x, String key, int y) {
 		if (x == null) {
 			return null;
 		}
@@ -68,7 +68,7 @@ public class TST<Value> {
 		}
 	}
 
-	public void put(String key, Value val) {
+	public void put(String key, String val) {
 		
 		if (!contains(key)) {
 			n++;
@@ -76,11 +76,11 @@ public class TST<Value> {
 		root = put(root, key, val, 0);
 	}
 
-	private tstSearchNode<Value> put(tstSearchNode<Value> x, String key, Value val, int y) {
+	private tstSearchNode<String> put(tstSearchNode<String> x, String key, String val, int y) {
 		
 		char c = key.charAt(y);
 		if (x == null) {
-			x = new tstSearchNode<Value>();
+			x = new tstSearchNode<String>();
 			x.character = c;
 		}
 		
@@ -100,36 +100,36 @@ public class TST<Value> {
 		return x;
 	}
 
-	public Iterable<String> keysWithPrefix(String prefix) {
+	public ArrayList<String> keysWithPrefix(String prefix) {
 		
 		if (prefix == null) {
 			return null;
 		}
-		Queue<String> queue = new LinkedList<String>();
-		tstSearchNode<Value> x = get(root, prefix, 0);
+		ArrayList<String> list = new ArrayList<String>();
+		tstSearchNode<String> x = get(root, prefix, 0);
 		if (x == null) {
-			return queue;
+			return list;
 		}
 		if (x.value != null) {
-			queue.add(prefix);
+			list.add(prefix);
 		}
-		collect(x.mid, new StringBuilder(prefix), queue);
-		return queue;
+		collect(x.mid, new StringBuilder(prefix), list);
+		return list;
 	}
 
-	private void collect(tstSearchNode<Value> x, StringBuilder prefix, Queue<String> queue) {
+	private void collect(tstSearchNode<String> x, StringBuilder prefix, ArrayList<String> list) {
 		
 		if (x == null) {
 			return;
 		}
 		
-		collect(x.left, prefix, queue);
+		collect(x.left, prefix, list);
 		
 		if (x.value != null) {
-			queue.add(prefix.toString() + x.character);	
+			list.add(prefix.toString() + x.character);	
 		}
-		collect(x.mid, prefix.append(x.character), queue);
+		collect(x.mid, prefix.append(x.character), list);
 		prefix.deleteCharAt(prefix.length() - 1);
-		collect(x.right, prefix, queue);
+		collect(x.right, prefix, list);
 	}
 }
