@@ -8,14 +8,13 @@ public class FrontInterface {
 
 	public static ArrayList<BusStops> busStops = new ArrayList<BusStops>();
 	public static ArrayList<StopTimes> stopTimes = new ArrayList<StopTimes>();
-	public static TST<BusStops> ternarySearchTrie = new TST<BusStops>();
-	public static ArrayList<String> tstResults = new ArrayList<String>();
+	public static TST<String> ternarySearchTrie = new TST<String>();
 
 	public static void main(String[] args) throws FileNotFoundException {
 
 		readInStopsFile();
-		readInStopTimesFile();
-		removeInvalidTimes();
+		//readInStopTimesFile();
+		//removeInvalidTimes();
 		Scanner scanner = new Scanner(System.in);
 		boolean exit = false;
 
@@ -40,33 +39,28 @@ public class FrontInterface {
 					if (scanner.hasNextLine()) {
 						String input = scanner.nextLine();
 						String busStopInput = input.toUpperCase();
-						createTernarySearchTrie(busStopInput);
-						tstResults = ternarySearchTrie.keysWithPrefix(busStopInput);
-						String[] busStopInfo = new String[7];
+						
 						for (int i = 0; i < busStops.size(); i++) {
-
-							if (busStopInput.equals(busStops.get(i).returnStopName())) {
-								busStopInfo[0] = busStops.get(i).returnStopId();
-								busStopInfo[1] = busStops.get(i).returnStopCode();
-								busStopInfo[2] = busStops.get(i).returnStopName();
-								busStopInfo[3] = busStops.get(i).returnStopDesc();
-								busStopInfo[4] = busStops.get(i).returnStopLat();
-								busStopInfo[5] = busStops.get(i).returnStopLon();
-								busStopInfo[6] = busStops.get(i).returnZoneId();
-
-								String[] outputInfo = new String[7];
-								outputInfo[0] = "Stop Name: " + busStopInfo[2] + "\n";
-								outputInfo[1] = "Stop ID: " + busStopInfo[0] + "\n";
-								outputInfo[2] = "Stop Code: " + busStopInfo[1] + "\n";
-								outputInfo[3] = "Stop Desc: " + busStopInfo[3] + "\n";
-								outputInfo[4] = "Stop Latitude: " + busStopInfo[4] + "\n";
-								outputInfo[5] = "Stop Longitude: " + busStopInfo[5] + "\n";
-								outputInfo[6] = "Stop Zone ID: " + busStopInfo[6] + "\n";
-
-								for (int j = 0; j < outputInfo.length; j++) {
-									System.out.println(outputInfo[j]);
-								}
-							}
+							String[] busStopInfo = new String[7];
+							busStopInfo[0] = busStops.get(i).returnStopId();
+							busStopInfo[1] = busStops.get(i).returnStopCode();
+							busStopInfo[2] = busStops.get(i).returnStopName();
+							busStopInfo[3] = busStops.get(i).returnStopDesc();
+							busStopInfo[4] = busStops.get(i).returnStopLat();
+							busStopInfo[5] = busStops.get(i).returnStopLon();
+							busStopInfo[6] = busStops.get(i).returnZoneId();
+							String stopName = busStopInfo[2];
+							String stopInformation = "\nStop Name: " + busStopInfo[2] + "\nStop ID: " + busStopInfo[0] + "\nStop Code: " + busStopInfo[1] +
+									"\nStop Desc: " + busStopInfo[3] + "\nStop Latitude: " + busStopInfo[4] + "\nStop Latitude: " + busStopInfo[5] +
+									"\nZone ID: " + busStopInfo[6];
+							ternarySearchTrie.put(stopName, stopInformation);
+							
+						}
+						String outputInfo = "";
+						for(String s : ternarySearchTrie.keysWithPrefix(busStopInput))
+						{
+							outputInfo += s+ternarySearchTrie.get(s) + "\n";
+							System.out.println(outputInfo);
 						}
 
 					} else {
@@ -155,11 +149,9 @@ public class FrontInterface {
 		}
 	}
 
-	public static void createTernarySearchTrie(String input)
-	{
-		for(int i = 0; i < busStops.size(); i++)
-		{
-			ternarySearchTrie.put(busStops.get(i).returnStopName(), input);
+	public static void createTernarySearchTrie(String input) {
+		for (int i = 0; i < busStops.size(); i++) {
+			ternarySearchTrie.put(input, busStops.get(i).returnStopName());
 		}
 	}
 
@@ -167,14 +159,12 @@ public class FrontInterface {
 	// list
 	public static void removeInvalidTimes() {
 		for (int i = 0; i < stopTimes.size(); i++) {
-			if (stopTimes.get(i).returnArrivalTime().charAt(0) == '3'
-					|| (stopTimes.get(i).returnArrivalTime().charAt(0) == '2'
-							&& (stopTimes.get(i).returnArrivalTime().charAt(1) == '4'
-									|| stopTimes.get(i).returnArrivalTime().charAt(1) == '5'
-									|| stopTimes.get(i).returnArrivalTime().charAt(1) == '6'
-									|| stopTimes.get(i).returnArrivalTime().charAt(1) == '7'
-									|| stopTimes.get(i).returnArrivalTime().charAt(1) == '8'
-									|| stopTimes.get(i).returnArrivalTime().charAt(1) == '9'))) {
+			if ((stopTimes.get(i).arrival_time.charAt(0) == '3') || (stopTimes.get(i).arrival_time.charAt(0) == '2'
+					&& (stopTimes.get(i).arrival_time.charAt(1) == '4' || stopTimes.get(i).arrival_time.charAt(1) == '5'
+							|| stopTimes.get(i).arrival_time.charAt(1) == '6'
+							|| stopTimes.get(i).arrival_time.charAt(1) == '7'
+							|| stopTimes.get(i).arrival_time.charAt(1) == '8'
+							|| stopTimes.get(i).arrival_time.charAt(1) == '9'))) {
 				stopTimes.remove(i);
 			}
 		}

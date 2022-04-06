@@ -4,7 +4,7 @@ public class StopTimes {
 	public String trip_id;
 	public String arrival_time;
 	public String departure_time;
-	public String stop_id;
+	public int stop_id;
 	public int stop_sequence;
 	//public String stop_headsign;
 	//public int pickup_type;
@@ -17,7 +17,7 @@ public class StopTimes {
 		this.trip_id = inputVals[0];
 		this.arrival_time = inputVals[1];
 		this.departure_time = inputVals[2];
-		this.stop_id = inputVals[3];
+		this.stop_id = Integer.parseInt(inputVals[3]);
 		this.stop_sequence = Integer.parseInt(inputVals[4]);
 		//this.stop_headsign = inputVals[5];
 		//this.pickup_type = Integer.parseInt(inputVals[6]);

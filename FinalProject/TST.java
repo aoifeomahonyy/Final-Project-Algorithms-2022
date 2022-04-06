@@ -3,14 +3,12 @@ import java.util.*;
 public class TST<Value> {
 
 	private int n;
-	private tstSearchNode<String> root;
+	private Node<Value> root;
 
-	private static class tstSearchNode<String> {
-		private char character;
-		private tstSearchNode<String> left;
-		private tstSearchNode<String> mid;
-		private tstSearchNode<String> right;
-		private String value;
+	private static class Node<Value> {
+		private char c; // character
+		private Node<Value> left, mid, right; // left, middle, and right subtries
+		private Value val;
 
 	}
 
@@ -22,114 +20,102 @@ public class TST<Value> {
 		return n;
 	}
 
+	public boolean isEmpty() {
+		return root == null;
+	}
+
 	public boolean contains(String key) {
-		if (key == null) {
+		if (key == null)
 			return false;
-		}
 
 		return get(key) != null;
 	}
 
-	public String get(String key) {
+	public Value get(String key) {
 		if (key == null) {
 			return null;
 		}
 		if (key.length() == 0) {
 			return null;
 		}
-		tstSearchNode<String> x = get(root, key, 0);
-		if (x == null) {
+		Node<Value> x = get(root, key, 0);
+		if (x == null)
 			return null;
-		}
-		
-		return x.value;
+		return x.val;
 	}
 
-	private tstSearchNode<String> get(tstSearchNode<String> x, String key, int y) {
+	private Node<Value> get(Node<Value> x, String key, int d) {
 		if (x == null) {
 			return null;
 		}
 		if (key.length() == 0) {
 			return null;
 		}
-		char c = key.charAt(y);
-		
-		if (c < x.character) {
-			return get(x.left, key, y);
-			
-		} else if (c > x.character) {
-			return get(x.right, key, y);
-			
-		} else if (y < key.length() - 1) {
-			return get(x.mid, key, y + 1);
-			
+		char c = key.charAt(d);
+		if (c < x.c) {
+			return get(x.left, key, d);
+		} else if (c > x.c) {
+			return get(x.right, key, d);
+		} else if (d < key.length() - 1) {
+			return get(x.mid, key, d + 1);
 		} else {
 			return x;
 		}
 	}
 
-	public void put(String key, String val) {
-		
+	public void put(String key, Value val) {
 		if (!contains(key)) {
 			n++;
-		} 
+		} else if (val == null) {
+			n--;
+		}
 		root = put(root, key, val, 0);
 	}
 
-	private tstSearchNode<String> put(tstSearchNode<String> x, String key, String val, int y) {
-		
-		char c = key.charAt(y);
+	private Node<Value> put(Node<Value> x, String key, Value val, int d) {
+		char c = key.charAt(d);
 		if (x == null) {
-			x = new tstSearchNode<String>();
-			x.character = c;
+			x = new Node<Value>();
+			x.c = c;
 		}
-		
-		if (c < x.character) {
-			x.left = put(x.left, key, val, y);
-			
-		} else if (c > x.character) {
-			x.right = put(x.right, key, val, y);
-			
-		} else if (y < key.length() - 1) {
-			x.mid = put(x.mid, key, val, y + 1);
-			
+		if (c < x.c) {
+			x.left = put(x.left, key, val, d);
+		} else if (c > x.c) {
+			x.right = put(x.right, key, val, d);
+		} else if (d < key.length() - 1) {
+			x.mid = put(x.mid, key, val, d + 1);
 		} else {
-			x.value = val;
-			
+			x.val = val;
 		}
 		return x;
 	}
 
-	public ArrayList<String> keysWithPrefix(String prefix) {
-		
+	public Iterable<String> keysWithPrefix(String prefix) {
 		if (prefix == null) {
 			return null;
 		}
-		ArrayList<String> list = new ArrayList<String>();
-		tstSearchNode<String> x = get(root, prefix, 0);
+		Queue<String> queue = new LinkedList<String>();
+		Node<Value> x = get(root, prefix, 0);
 		if (x == null) {
-			return list;
+			return queue;
 		}
-		if (x.value != null) {
-			list.add(prefix);
+		if (x.val != null) {
+			queue.add(prefix);
 		}
-		collect(x.mid, new StringBuilder(prefix), list);
-		return list;
+		collect(x.mid, new StringBuilder(prefix), queue);
+		return queue;
 	}
 
-	private void collect(tstSearchNode<String> x, StringBuilder prefix, ArrayList<String> list) {
-		
+	private void collect(Node<Value> x, StringBuilder prefix, Queue<String> queue) {
 		if (x == null) {
 			return;
 		}
-		
-		collect(x.left, prefix, list);
-		
-		if (x.value != null) {
-			list.add(prefix.toString() + x.character);	
+		collect(x.left, prefix, queue);
+		if (x.val != null) {
+			queue.add(prefix.toString() + x.c);
 		}
-		collect(x.mid, prefix.append(x.character), list);
+		collect(x.mid, prefix.append(x.c), queue);
 		prefix.deleteCharAt(prefix.length() - 1);
-		collect(x.right, prefix, list);
+		collect(x.right, prefix, queue);
 	}
 }
