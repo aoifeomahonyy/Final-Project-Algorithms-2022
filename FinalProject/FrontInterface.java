@@ -8,8 +8,8 @@ public class FrontInterface {
 
 	public static ArrayList<BusStops> busStops = new ArrayList<BusStops>();
 	public static ArrayList<StopTimes> stopTimes = new ArrayList<StopTimes>();
-	public static TST<BusStops> ternarySearchTree = new TST<BusStops>();
-	public static ArrayList<BusStops> tstResults = new ArrayList<BusStops>();
+	public static TST<BusStops> ternarySearchTrie = new TST<BusStops>();
+	public static ArrayList<String> tstResults = new ArrayList<String>();
 
 	public static void main(String[] args) throws FileNotFoundException {
 
@@ -40,9 +40,9 @@ public class FrontInterface {
 					if (scanner.hasNextLine()) {
 						String input = scanner.nextLine();
 						String busStopInput = input.toUpperCase();
+						createTernarySearchTrie(busStopInput);
+						tstResults = ternarySearchTrie.keysWithPrefix(busStopInput);
 						String[] busStopInfo = new String[7];
-						createResultsList(busStopInput);
-
 						for (int i = 0; i < busStops.size(); i++) {
 
 							if (busStopInput.equals(busStops.get(i).returnStopName())) {
@@ -155,25 +155,11 @@ public class FrontInterface {
 		}
 	}
 
-	public static String test(String input) {
-		String ans = "";
-		for (int i = 0; i < busStops.size(); i++) {
-			ternarySearchTree.put(input, busStops.get(i));
-			Iterable<String> result = ternarySearchTree.keysWithPrefix(busStops.get(i).returnStopName());
-			for (String s : result) {
-				ans += s + ternarySearchTree.get(s);
-			}
-		}
-		return ans;
-	}
-
-	public static void createResultsList(String userInput) {
-		for (int i = 0; i < busStops.size(); i++) {
-			ternarySearchTree.put(userInput, busStops.get(i));
-			Iterable<String> results = ternarySearchTree.keysWithPrefix(busStops.get(i).returnStopName());
-			for (String s : results) {
-				System.out.println(s);
-			}
+	public static void createTernarySearchTrie(String input)
+	{
+		for(int i = 0; i < busStops.size(); i++)
+		{
+			ternarySearchTrie.put(busStops.get(i).returnStopName(), input);
 		}
 	}
 
@@ -197,6 +183,6 @@ public class FrontInterface {
 	// I want this function to change the stopTimes array list to be sorted by trip
 	// id
 	public static void sortByTripId() {
-		
+
 	}
 }
