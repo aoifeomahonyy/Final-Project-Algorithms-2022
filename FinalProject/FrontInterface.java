@@ -8,13 +8,14 @@ public class FrontInterface {
 
 	public static ArrayList<BusStops> busStops = new ArrayList<BusStops>();
 	public static ArrayList<StopTimes> stopTimes = new ArrayList<StopTimes>();
+	public static ArrayList<StopTimes> stopTimesValidTimes = new ArrayList<StopTimes>();
 	public static TST<String> ternarySearchTrie = new TST<String>();
 
 	public static void main(String[] args) throws FileNotFoundException {
 
 		readInStopsFile();
-		//readInStopTimesFile();
-		//removeInvalidTimes();
+		readInStopTimesFile();
+		newStopTimesList();
 		Scanner scanner = new Scanner(System.in);
 		boolean exit = false;
 
@@ -39,7 +40,7 @@ public class FrontInterface {
 					if (scanner.hasNextLine()) {
 						String input = scanner.nextLine();
 						String busStopInput = input.toUpperCase();
-						
+
 						for (int i = 0; i < busStops.size(); i++) {
 							String[] busStopInfo = new String[7];
 							busStopInfo[0] = busStops.get(i).returnStopId();
@@ -50,16 +51,17 @@ public class FrontInterface {
 							busStopInfo[5] = busStops.get(i).returnStopLon();
 							busStopInfo[6] = busStops.get(i).returnZoneId();
 							String stopName = busStopInfo[2];
-							String stopInformation = "\nStop Name: " + busStopInfo[2] + "\nStop ID: " + busStopInfo[0] + "\nStop Code: " + busStopInfo[1] +
-									"\nStop Desc: " + busStopInfo[3] + "\nStop Latitude: " + busStopInfo[4] + "\nStop Latitude: " + busStopInfo[5] +
-									"\nZone ID: " + busStopInfo[6];
+							String stopInformation = "\n****************************************\nStop Name: "
+									+ busStopInfo[2] + "\nStop ID: " + busStopInfo[0] + "\nStop Code: " + busStopInfo[1]
+									+ "\nStop Desc: " + busStopInfo[3] + "\nStop Latitude: " + busStopInfo[4]
+									+ "\nStop Latitude: " + busStopInfo[5] + "\nZone ID: " + busStopInfo[6]
+									+ "\n****************************************\n";
 							ternarySearchTrie.put(stopName, stopInformation);
-							
+
 						}
 						String outputInfo = "";
-						for(String s : ternarySearchTrie.keysWithPrefix(busStopInput))
-						{
-							outputInfo += s+ternarySearchTrie.get(s) + "\n";
+						for (String s : ternarySearchTrie.keysWithPrefix(busStopInput)) {
+							outputInfo += s + ternarySearchTrie.get(s) + "\n";
 							System.out.println(outputInfo);
 						}
 
@@ -68,22 +70,21 @@ public class FrontInterface {
 					}
 				} else if (userInput.equals("3")) {
 
-					// removeInvalidTime();
 					System.out.print("Enter your arrival time in the format 'hh:mm:ss':");
 					if (scanner.hasNextLine()) {
 						String timeInput = scanner.nextLine();
 						String[] stopTimesInfo = new String[5];
 						int count = 0;
-						for (int i = 0; i < stopTimes.size(); i++) {
-							if (timeInput.equals(stopTimes.get(i).returnArrivalTime())) {
+						for (int i = 0; i < stopTimesValidTimes.size(); i++) {
+							if (timeInput.equals(stopTimesValidTimes.get(i).returnArrivalTime())) {
 								count = count + 1;
 								System.out.print("*********************************");
 								System.out.print("\nTrip result number " + count + ":\n");
-								stopTimesInfo[0] = stopTimes.get(i).returnTripId();
-								stopTimesInfo[1] = stopTimes.get(i).returnArrivalTime();
-								stopTimesInfo[2] = stopTimes.get(i).returnDepTime();
-								stopTimesInfo[3] = stopTimes.get(i).returnStopId();
-								stopTimesInfo[4] = stopTimes.get(i).returnStopSequence();
+								stopTimesInfo[0] = stopTimesValidTimes.get(i).returnTripId();
+								stopTimesInfo[1] = stopTimesValidTimes.get(i).returnArrivalTime();
+								stopTimesInfo[2] = stopTimesValidTimes.get(i).returnDepTime();
+								stopTimesInfo[3] = stopTimesValidTimes.get(i).returnStopId();
+								stopTimesInfo[4] = stopTimesValidTimes.get(i).returnStopSequence();
 								// stopTimesInfo[5] = stopTimes.get(i).returnStopHeadsign();
 								// stopTimesInfo[6] = stopTimes.get(i).returnPickupType();
 								// stopTimesInfo[7] = stopTimes.get(i).returnDropoffType();
@@ -148,31 +149,19 @@ public class FrontInterface {
 			e.printStackTrace();
 		}
 	}
-
-	public static void createTernarySearchTrie(String input) {
-		for (int i = 0; i < busStops.size(); i++) {
-			ternarySearchTrie.put(input, busStops.get(i).returnStopName());
-		}
-	}
-
-	// Function that will delete trips with invalid times from the stopTimes array
-	// list
-	public static void removeInvalidTimes() {
+	//Function that creates a new array list with only valid arrival times in it
+	public static void newStopTimesList() {
 		for (int i = 0; i < stopTimes.size(); i++) {
-			if ((stopTimes.get(i).arrival_time.charAt(0) == '3') || (stopTimes.get(i).arrival_time.charAt(0) == '2'
-					&& (stopTimes.get(i).arrival_time.charAt(1) == '4' || stopTimes.get(i).arrival_time.charAt(1) == '5'
-							|| stopTimes.get(i).arrival_time.charAt(1) == '6'
-							|| stopTimes.get(i).arrival_time.charAt(1) == '7'
-							|| stopTimes.get(i).arrival_time.charAt(1) == '8'
-							|| stopTimes.get(i).arrival_time.charAt(1) == '9'))) {
-				stopTimes.remove(i);
+			if ((stopTimes.get(i).returnArrivalTime().charAt(0) == ' '
+					|| stopTimes.get(i).returnArrivalTime().charAt(0) == '1')
+					|| (stopTimes.get(i).returnArrivalTime().charAt(0) == '2'
+							&& (stopTimes.get(i).returnArrivalTime().charAt(1) == '0'
+									|| stopTimes.get(i).returnArrivalTime().charAt(1) == '1'
+									|| stopTimes.get(i).returnArrivalTime().charAt(1) == '2'
+									|| stopTimes.get(i).returnArrivalTime().charAt(1) == '3'))) {
+				stopTimesValidTimes.add(stopTimes.get(i));
 			}
 		}
 	}
 
-	// I want this function to change the stopTimes array list to be sorted by trip
-	// id
-	public static void sortByTripId() {
-
-	}
 }
