@@ -18,7 +18,7 @@ public class FrontInterface {
 		newStopTimesList();
 		StopTimes[] stopTimesNeedSorting = new StopTimes[stopTimesValidTimes.size()];
 		stopTimesValidTimes.toArray(stopTimesNeedSorting);
-		StopTimes [] sortedStopTimes = new StopTimes[stopTimesNeedSorting.length];
+		StopTimes[] sortedStopTimes = new StopTimes[stopTimesNeedSorting.length];
 		sortedStopTimes = mergeSortRecursive(stopTimesNeedSorting);
 		stopTimesValidTimes = Arrays.asList(sortedStopTimes);
 		Scanner scanner = new Scanner(System.in);
@@ -45,7 +45,7 @@ public class FrontInterface {
 					if (scanner.hasNextLine()) {
 						String input = scanner.nextLine();
 						String busStopInput = input.toUpperCase();
-
+						int count = 0;
 						for (int i = 0; i < busStops.size(); i++) {
 							String[] busStopInfo = new String[7];
 							busStopInfo[0] = busStops.get(i).returnStopId();
@@ -67,17 +67,23 @@ public class FrontInterface {
 						String outputInfo = "";
 						for (String s : ternarySearchTrie.keysWithPrefix(busStopInput)) {
 							outputInfo += s + ternarySearchTrie.get(s) + "\n";
+							count = count + 1;
 						}
-						System.out.println(outputInfo);
-
-					} else {
-						System.out.print("Bus stop was not found. Please try again.");
+						System.out.println(
+								"We have found " + count + " results for your input '" + input + "':\n" + outputInfo);
+						if (outputInfo.equals("")) {
+							System.out.println("No bus stops could be found. Please try again!\n");
+						}
 					}
 				} else if (userInput.equals("3")) {
 
 					System.out.print("Enter your arrival time in the format 'hh:mm:ss':");
 					if (scanner.hasNextLine()) {
 						String timeInput = scanner.nextLine();
+						if(timeInput.length() != 8)
+						{
+							System.out.println("Invalid time. Make sure to enter in the correct format 'hh:mm:ss'\n");
+						}
 						String[] stopTimesInfo = new String[8];
 						int count = 0;
 						for (int i = 0; i < stopTimesValidTimes.size(); i++) {
@@ -106,13 +112,16 @@ public class FrontInterface {
 								outputInfo[7] = "Dropoff Type: " + stopTimesInfo[7] + "\n";
 								// outputInfo[8] = "Shape Distance Travelled: " + stopTimesInfo[8];
 
+								//System.out.print("We found " + count + " trip results for your specified arrival time: ");
 								for (int j = 0; j < outputInfo.length; j++) {
 									System.out.println(outputInfo[j]);
 								}
-							}
+							} 
 						}
 					}
-				} else {
+				} 
+				else 
+				{
 					System.out.print("Error. Please enter 1, 2, 3 or exit!");
 				}
 			}
@@ -176,12 +185,12 @@ public class FrontInterface {
 			return null;
 		} else {
 			StopTimes[] aux = new StopTimes[a.length];
-			sort(a, aux, 0, a.length-1);
+			sort(a, aux, 0, a.length - 1);
 		}
 		return a;
 	}
 
-	private static void sort(StopTimes[] a, StopTimes [] aux, int low, int high) {
+	private static void sort(StopTimes[] a, StopTimes[] aux, int low, int high) {
 		if (high <= low) {
 			return;
 		}
