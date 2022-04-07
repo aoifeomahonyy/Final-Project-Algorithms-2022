@@ -7,8 +7,8 @@ import java.util.Scanner;
 public class FrontInterface {
 
 	public static ArrayList<BusStops> busStops = new ArrayList<BusStops>();
-	public static ArrayList<StopTimes> stopTimes = new ArrayList<StopTimes>();
-	public static ArrayList<StopTimes> stopTimesValidTimes = new ArrayList<StopTimes>();
+	public static List<StopTimes> stopTimes = new ArrayList<StopTimes>();
+	public static List<StopTimes> stopTimesValidTimes = new ArrayList<StopTimes>();
 	public static TST<String> ternarySearchTrie = new TST<String>();
 
 	public static void main(String[] args) throws FileNotFoundException {
@@ -16,6 +16,11 @@ public class FrontInterface {
 		readInStopsFile();
 		readInStopTimesFile();
 		newStopTimesList();
+		StopTimes[] stopTimesNeedSorting = new StopTimes[stopTimesValidTimes.size()];
+		stopTimesValidTimes.toArray(stopTimesNeedSorting);
+		StopTimes [] sortedStopTimes = new StopTimes[stopTimesNeedSorting.length];
+		sortedStopTimes = mergeSortRecursive(stopTimesNeedSorting);
+		stopTimesValidTimes = Arrays.asList(sortedStopTimes);
 		Scanner scanner = new Scanner(System.in);
 		boolean exit = false;
 
@@ -62,8 +67,8 @@ public class FrontInterface {
 						String outputInfo = "";
 						for (String s : ternarySearchTrie.keysWithPrefix(busStopInput)) {
 							outputInfo += s + ternarySearchTrie.get(s) + "\n";
-							System.out.println(outputInfo);
 						}
+						System.out.println(outputInfo);
 
 					} else {
 						System.out.print("Bus stop was not found. Please try again.");
@@ -73,7 +78,7 @@ public class FrontInterface {
 					System.out.print("Enter your arrival time in the format 'hh:mm:ss':");
 					if (scanner.hasNextLine()) {
 						String timeInput = scanner.nextLine();
-						String[] stopTimesInfo = new String[5];
+						String[] stopTimesInfo = new String[8];
 						int count = 0;
 						for (int i = 0; i < stopTimesValidTimes.size(); i++) {
 							if (timeInput.equals(stopTimesValidTimes.get(i).returnArrivalTime())) {
@@ -85,20 +90,20 @@ public class FrontInterface {
 								stopTimesInfo[2] = stopTimesValidTimes.get(i).returnDepTime();
 								stopTimesInfo[3] = stopTimesValidTimes.get(i).returnStopId();
 								stopTimesInfo[4] = stopTimesValidTimes.get(i).returnStopSequence();
-								// stopTimesInfo[5] = stopTimes.get(i).returnStopHeadsign();
-								// stopTimesInfo[6] = stopTimes.get(i).returnPickupType();
-								// stopTimesInfo[7] = stopTimes.get(i).returnDropoffType();
-								// stopTimesInfo[8] = stopTimes.get(i).returnShapeDistTravelled();
+								stopTimesInfo[5] = stopTimesValidTimes.get(i).returnStopHeadsign();
+								stopTimesInfo[6] = stopTimesValidTimes.get(i).returnPickupType();
+								stopTimesInfo[7] = stopTimesValidTimes.get(i).returnDropoffType();
+								// stopTimesInfo[8] = stopTimesValidTimes.get(i).returnShapeDistTravelled();
 
-								String[] outputInfo = new String[5];
+								String[] outputInfo = new String[8];
 								outputInfo[0] = "\nSpecified Arrival Time: " + stopTimesInfo[1] + "\n";
 								outputInfo[1] = "Trip ID: " + stopTimesInfo[0] + "\n";
 								outputInfo[2] = "Departure Time: " + stopTimesInfo[2] + "\n";
 								outputInfo[3] = "Stop ID: " + stopTimesInfo[3] + "\n";
 								outputInfo[4] = "Stop Sequence: " + stopTimesInfo[4] + "\n";
-								// outputInfo[5] = "Stop Headsign: " + stopTimesInfo[5];
-								// outputInfo[6] = "Pickup Type: " + stopTimesInfo[6];
-								// outputInfo[7] = "Dropoff Type: " + stopTimesInfo[7];
+								outputInfo[5] = "Stop Headsign: " + stopTimesInfo[5] + "\n";
+								outputInfo[6] = "Pickup Type: " + stopTimesInfo[6] + "\n";
+								outputInfo[7] = "Dropoff Type: " + stopTimesInfo[7] + "\n";
 								// outputInfo[8] = "Shape Distance Travelled: " + stopTimesInfo[8];
 
 								for (int j = 0; j < outputInfo.length; j++) {
@@ -149,7 +154,8 @@ public class FrontInterface {
 			e.printStackTrace();
 		}
 	}
-	//Function that creates a new array list with only valid arrival times in it
+
+	// Function that creates a new array list with only valid arrival times in it
 	public static void newStopTimesList() {
 		for (int i = 0; i < stopTimes.size(); i++) {
 			if ((stopTimes.get(i).returnArrivalTime().charAt(0) == ' '
@@ -164,4 +170,43 @@ public class FrontInterface {
 		}
 	}
 
+	// Implementing merge sort to sort the stop times array by trip id
+	public static StopTimes[] mergeSortRecursive(StopTimes[] a) {
+		if (a == null) {
+			return null;
+		} else {
+			StopTimes[] aux = new StopTimes[a.length];
+			sort(a, aux, 0, a.length-1);
+		}
+		return a;
+	}
+
+	private static void sort(StopTimes[] a, StopTimes [] aux, int low, int high) {
+		if (high <= low) {
+			return;
+		}
+		int middle = low + (high - low) / 2;
+		sort(a, aux, low, middle);
+		sort(a, aux, middle + 1, high);
+		merge(a, aux, low, middle, high);
+	}
+
+	private static void merge(StopTimes[] a, StopTimes[] aux, int low, int middle, int high) {
+		for (int k = low; k <= high; k++) {
+			aux[k] = a[k];
+		}
+		int i = low;
+		int j = middle + 1;
+		for (int k = low; k <= high; k++) {
+			if (i > middle) {
+				a[k].trip_id = aux[j++].trip_id;
+			} else if (j > high) {
+				a[k].trip_id = aux[i++].trip_id;
+			} else if (aux[j].trip_id < aux[i].trip_id) {
+				a[k].trip_id = aux[j++].trip_id;
+			} else {
+				a[k].trip_id = aux[i++].trip_id;
+			}
+		}
+	}
 }
