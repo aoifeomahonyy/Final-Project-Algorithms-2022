@@ -212,12 +212,19 @@ public class FrontInterface {
 			}
 		}
 	}
-	
+	// returns an error message if an invalid time is inputted
 	public static void invalidUserInputTime(String input)
 	{
 		char h1 = input.charAt(0);
 		char h2 = input.charAt(1);
-		String hoursEntered = "" + h1+h2;
+		String hoursEntered = "";
+		if(h1 == ' ')
+		{
+			hoursEntered = "" + h2;
+		}
+		else {
+			hoursEntered = "" + h1+h2;
+		}
 		int hoursEntered2 = Integer.parseInt(hoursEntered);
 		char min1 = input.charAt(3);
 		char min2 = input.charAt(4);
