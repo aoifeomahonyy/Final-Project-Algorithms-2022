@@ -80,10 +80,7 @@ public class FrontInterface {
 					System.out.print("Enter your arrival time in the format 'hh:mm:ss':");
 					if (scanner.hasNextLine()) {
 						String timeInput = scanner.nextLine();
-						if(timeInput.length() != 8)
-						{
-							System.out.println("Invalid time. Make sure to enter in the correct format 'hh:mm:ss'\n");
-						}
+						invalidUserInputTime(timeInput);
 						String[] stopTimesInfo = new String[8];
 						int count = 0;
 						for (int i = 0; i < stopTimesValidTimes.size(); i++) {
@@ -99,22 +96,19 @@ public class FrontInterface {
 								stopTimesInfo[5] = stopTimesValidTimes.get(i).returnStopHeadsign();
 								stopTimesInfo[6] = stopTimesValidTimes.get(i).returnPickupType();
 								stopTimesInfo[7] = stopTimesValidTimes.get(i).returnDropoffType();
-								// stopTimesInfo[8] = stopTimesValidTimes.get(i).returnShapeDistTravelled();
 
 								String[] outputInfo = new String[8];
-								outputInfo[0] = "\nSpecified Arrival Time: " + stopTimesInfo[1] + "\n";
-								outputInfo[1] = "Trip ID: " + stopTimesInfo[0] + "\n";
-								outputInfo[2] = "Departure Time: " + stopTimesInfo[2] + "\n";
-								outputInfo[3] = "Stop ID: " + stopTimesInfo[3] + "\n";
-								outputInfo[4] = "Stop Sequence: " + stopTimesInfo[4] + "\n";
-								outputInfo[5] = "Stop Headsign: " + stopTimesInfo[5] + "\n";
-								outputInfo[6] = "Pickup Type: " + stopTimesInfo[6] + "\n";
-								outputInfo[7] = "Dropoff Type: " + stopTimesInfo[7] + "\n";
-								// outputInfo[8] = "Shape Distance Travelled: " + stopTimesInfo[8];
+								outputInfo[0] = "\nSpecified Arrival Time: " + stopTimesInfo[1];
+								outputInfo[1] = "\nTrip ID: " + stopTimesInfo[0];
+								outputInfo[2] = "\nDeparture Time: " + stopTimesInfo[2];
+								outputInfo[3] = "\nStop ID: " + stopTimesInfo[3];
+								outputInfo[4] = "\nStop Sequence: " + stopTimesInfo[4];
+								outputInfo[5] = "\nStop Headsign: " + stopTimesInfo[5];
+								outputInfo[6] = "\nPickup Type: " + stopTimesInfo[6];
+								outputInfo[7] = "\nDropoff Type: " + stopTimesInfo[7] + "\n";
 
-								//System.out.print("We found " + count + " trip results for your specified arrival time: ");
 								for (int j = 0; j < outputInfo.length; j++) {
-									System.out.println(outputInfo[j]);
+									System.out.print(outputInfo[j]);
 								}
 							} 
 						}
@@ -216,6 +210,26 @@ public class FrontInterface {
 			} else {
 				a[k].trip_id = aux[i++].trip_id;
 			}
+		}
+	}
+	
+	public static void invalidUserInputTime(String input)
+	{
+		char h1 = input.charAt(0);
+		char h2 = input.charAt(1);
+		String hoursEntered = "" + h1+h2;
+		int hoursEntered2 = Integer.parseInt(hoursEntered);
+		char min1 = input.charAt(3);
+		char min2 = input.charAt(4);
+		String minutesEntered ="" + min1+min2;
+		int minutesEntered2 = Integer.parseInt(minutesEntered);
+		char sec1 = input.charAt(6);
+		char sec2 = input.charAt(7);
+		String secondsEntered = "" + sec1+sec2;
+		int secondsEntered2 = Integer.parseInt(secondsEntered);
+		if((input.length() != 8) || (hoursEntered2 > 23) || (minutesEntered2 > 59) || (secondsEntered2 > 59))
+		{
+			System.out.println("\nInvalid time. Make sure to enter in the correct format 'hh:mm:ss'\n");
 		}
 	}
 }
