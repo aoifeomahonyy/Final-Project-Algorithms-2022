@@ -1,6 +1,5 @@
 import java.util.*;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.File;
 import java.util.Scanner;
 
@@ -9,6 +8,7 @@ public class FrontInterface {
 	public static ArrayList<BusStops> busStops = new ArrayList<BusStops>();
 	public static List<StopTimes> stopTimes = new ArrayList<StopTimes>();
 	public static List<StopTimes> stopTimesValidTimes = new ArrayList<StopTimes>();
+	public static ArrayList<Transfers> transfers = new ArrayList<Transfers>();
 	public static TST<String> ternarySearchTrie = new TST<String>();
 
 	public static void main(String[] args) throws FileNotFoundException {
@@ -16,6 +16,7 @@ public class FrontInterface {
 		readInStopsFile();
 		readInStopTimesFile();
 		newStopTimesList();
+		readInTransfersFile();
 		StopTimes[] stopTimesNeedSorting = new StopTimes[stopTimesValidTimes.size()];
 		stopTimesValidTimes.toArray(stopTimesNeedSorting);
 		StopTimes[] sortedStopTimes = new StopTimes[stopTimesNeedSorting.length];
@@ -40,7 +41,20 @@ public class FrontInterface {
 					System.out.println("You are now exiting the system. Thank you! ");
 					break;
 
-				} else if (userInput.equals("2")) {
+				} else if(userInput.equals("1")) {
+					System.out.println("Enter the bus stop you are beginning your journey at: ");
+					String input1 = scanner.nextLine();
+					String stopInput1 = input1.toUpperCase();
+					System.out.println("Enter your destination bus stop: ");
+					String input2 = scanner.nextLine();
+					String stopInput2 = input2.toUpperCase();
+					for(int i = 0; i < busStops.size() i++) {
+						if((stopInput1.equals(busStops.get(i).returnStopName())) && (stopInput1.equals(busStops.get(i).returnStopName()))) {
+							
+						}
+					}
+				}
+				else if (userInput.equals("2")) {
 					System.out.println("Type your bus stop name: ");
 					if (scanner.hasNextLine()) {
 						String input = scanner.nextLine();
@@ -81,7 +95,7 @@ public class FrontInterface {
 					if (scanner.hasNextLine()) {
 						String timeInput = scanner.nextLine();
 						invalidUserInputTime(timeInput);
-						String[] stopTimesInfo = new String[8];
+						String[] stopTimesInfo = new String[9];
 						int count = 0;
 						for (int i = 0; i < stopTimesValidTimes.size(); i++) {
 							if (timeInput.equals(stopTimesValidTimes.get(i).returnArrivalTime())) {
@@ -96,8 +110,9 @@ public class FrontInterface {
 								stopTimesInfo[5] = stopTimesValidTimes.get(i).returnStopHeadsign();
 								stopTimesInfo[6] = stopTimesValidTimes.get(i).returnPickupType();
 								stopTimesInfo[7] = stopTimesValidTimes.get(i).returnDropoffType();
+								stopTimesInfo[8] = stopTimesValidTimes.get(i).returnShapeDistTravelled();
 
-								String[] outputInfo = new String[8];
+								String[] outputInfo = new String[9];
 								outputInfo[0] = "\nSpecified Arrival Time: " + stopTimesInfo[1];
 								outputInfo[1] = "\nTrip ID: " + stopTimesInfo[0];
 								outputInfo[2] = "\nDeparture Time: " + stopTimesInfo[2];
@@ -105,17 +120,16 @@ public class FrontInterface {
 								outputInfo[4] = "\nStop Sequence: " + stopTimesInfo[4];
 								outputInfo[5] = "\nStop Headsign: " + stopTimesInfo[5];
 								outputInfo[6] = "\nPickup Type: " + stopTimesInfo[6];
-								outputInfo[7] = "\nDropoff Type: " + stopTimesInfo[7] + "\n";
+								outputInfo[7] = "\nDropoff Type: " + stopTimesInfo[7];
+								outputInfo[8] = "\nShape Distance Travelled: " + stopTimesInfo[8] + "\n";
 
 								for (int j = 0; j < outputInfo.length; j++) {
 									System.out.print(outputInfo[j]);
 								}
-							} 
+							}
 						}
 					}
-				} 
-				else 
-				{
+				} else {
 					System.out.print("Error. Please enter 1, 2, 3 or exit!");
 				}
 			}
@@ -153,7 +167,23 @@ public class FrontInterface {
 			}
 			scanner.close();
 		} catch (FileNotFoundException e) {
-			System.out.print("Error. This file could not be found");
+			System.out.print("Error. This file could not be found.");
+			e.printStackTrace();
+		}
+	}
+
+	public static void readInTransfersFile() {
+		try {
+			File transfersFile = new File("transfers.txt");
+			Scanner scanner = new Scanner(transfersFile);
+			scanner.nextLine();
+			while (scanner.hasNextLine()) {
+				String inputData = scanner.nextLine();
+				transfers.add(new Transfers(inputData));
+			}
+			scanner.close();
+		} catch (FileNotFoundException e) {
+			System.out.print("Error. This file could not be found.");
 			e.printStackTrace();
 		}
 	}
@@ -212,31 +242,38 @@ public class FrontInterface {
 			}
 		}
 	}
+
 	// returns an error message if an invalid time is inputted
-	public static void invalidUserInputTime(String input)
-	{
-		char h1 = input.charAt(0);
-		char h2 = input.charAt(1);
-		String hoursEntered = "";
-		if(h1 == ' ')
-		{
-			hoursEntered = "" + h2;
-		}
-		else {
-			hoursEntered = "" + h1+h2;
-		}
-		int hoursEntered2 = Integer.parseInt(hoursEntered);
-		char min1 = input.charAt(3);
-		char min2 = input.charAt(4);
-		String minutesEntered ="" + min1+min2;
-		int minutesEntered2 = Integer.parseInt(minutesEntered);
-		char sec1 = input.charAt(6);
-		char sec2 = input.charAt(7);
-		String secondsEntered = "" + sec1+sec2;
-		int secondsEntered2 = Integer.parseInt(secondsEntered);
-		if((input.length() != 8) || (hoursEntered2 > 23) || (minutesEntered2 > 59) || (secondsEntered2 > 59))
+	public static void invalidUserInputTime(String input) {
+		if(input.length() != 8)
 		{
 			System.out.println("\nInvalid time. Make sure to enter in the correct format 'hh:mm:ss'\n");
+		}
+		else if(input.length()==8) {
+			char h1 = input.charAt(0);
+			char h2 = input.charAt(1);
+			String hoursEntered = "";
+			if (h1 == ' ') {
+				hoursEntered = "" + h2;
+			} else {
+				hoursEntered = "" + h1 + h2;
+			}
+			int hoursEntered2 = Integer.parseInt(hoursEntered);
+			char min1 = input.charAt(3);
+			char min2 = input.charAt(4);
+			String minutesEntered = "" + min1 + min2;
+			int minutesEntered2 = Integer.parseInt(minutesEntered);
+			char sec1 = input.charAt(6);
+			char sec2 = input.charAt(7);
+			String secondsEntered = "" + sec1 + sec2;
+			int secondsEntered2 = Integer.parseInt(secondsEntered);
+			if ((hoursEntered2 > 23) || (minutesEntered2 > 59) || (secondsEntered2 > 59)) {
+				System.out.println("\nInvalid time. Make sure to enter in the correct format 'hh:mm:ss'\n");
+			}
+			if(input.charAt(2)!=':' || input.charAt(5)!=':')
+			{
+				System.out.print("\nInvalid format. Make sure to include colons ':' in your input.\n");
+			}
 		}
 	}
 }
