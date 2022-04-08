@@ -6,8 +6,10 @@ public class TST<Value> {
 	private Node<Value> root;
 
 	private static class Node<Value> {
-		private char c; // character
-		private Node<Value> left, mid, right; // left, middle, and right subtries
+		private char character;
+		private Node<Value> left;
+		private Node<Value> mid; 
+		private Node<Value> right;
 		private Value val;
 
 	}
@@ -25,9 +27,9 @@ public class TST<Value> {
 	}
 
 	public boolean contains(String key) {
-		if (key == null)
+		if (key == null) {
 			return false;
-
+		}
 		return get(key) != null;
 	}
 
@@ -39,8 +41,9 @@ public class TST<Value> {
 			return null;
 		}
 		Node<Value> x = get(root, key, 0);
-		if (x == null)
+		if (x == null) {
 			return null;
+		}
 		return x.val;
 	}
 
@@ -52,9 +55,9 @@ public class TST<Value> {
 			return null;
 		}
 		char c = key.charAt(d);
-		if (c < x.c) {
+		if (c < x.character) {
 			return get(x.left, key, d);
-		} else if (c > x.c) {
+		} else if (c > x.character) {
 			return get(x.right, key, d);
 		} else if (d < key.length() - 1) {
 			return get(x.mid, key, d + 1);
@@ -76,11 +79,11 @@ public class TST<Value> {
 		char c = key.charAt(d);
 		if (x == null) {
 			x = new Node<Value>();
-			x.c = c;
+			x.character = c;
 		}
-		if (c < x.c) {
+		if (c < x.character) {
 			x.left = put(x.left, key, val, d);
-		} else if (c > x.c) {
+		} else if (c > x.character) {
 			x.right = put(x.right, key, val, d);
 		} else if (d < key.length() - 1) {
 			x.mid = put(x.mid, key, val, d + 1);
@@ -112,9 +115,9 @@ public class TST<Value> {
 		}
 		collect(x.left, prefix, queue);
 		if (x.val != null) {
-			queue.add(prefix.toString() + x.c);
+			queue.add(prefix.toString() + x.character);
 		}
-		collect(x.mid, prefix.append(x.c), queue);
+		collect(x.mid, prefix.append(x.character), queue);
 		prefix.deleteCharAt(prefix.length() - 1);
 		collect(x.right, prefix, queue);
 	}

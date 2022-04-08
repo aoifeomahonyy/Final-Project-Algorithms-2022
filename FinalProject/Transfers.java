@@ -10,8 +10,12 @@ public class Transfers {
 		String[] inputVals = input.split(",");
 		this.from_stop_id = Integer.parseInt(inputVals[0]);
 		this.to_stop_id = Integer.parseInt(inputVals[1]);
-		this.transfer_type = inputVals[3];
-		this.min_transfer_time = Integer.parseInt(inputVals[3]);
+		this.transfer_type = inputVals[2];
+		try {
+			this.min_transfer_time = Integer.parseInt(inputVals[3]);
+		} catch (Exception e) {
+			this.min_transfer_time = -1;
+		}
 	}
 	
 	public String returnFromStopId()

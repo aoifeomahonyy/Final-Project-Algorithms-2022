@@ -21,6 +21,11 @@ public class StopTimes {
 		this.stop_headsign = null;
 		this.pickup_type = Integer.parseInt(inputVals[6]);
 		this.drop_off_type = Integer.parseInt(inputVals[7]);
+		try {
+			this.shape_dist_travelled = Double.parseDouble(inputVals[8]);
+		} catch (Exception e) {
+			this.shape_dist_travelled = -1;
+		}
 
 	}
 
