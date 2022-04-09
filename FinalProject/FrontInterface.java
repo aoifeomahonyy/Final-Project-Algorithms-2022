@@ -8,7 +8,6 @@ public class FrontInterface {
 	public static ArrayList<BusStops> busStops = new ArrayList<BusStops>();
 	public static List<StopTimes> stopTimes = new ArrayList<StopTimes>();
 	public static List<StopTimes> stopTimesValidTimes = new ArrayList<StopTimes>();
-	public static ArrayList<Transfers> transfers = new ArrayList<Transfers>();
 	public static TST<String> ternarySearchTrie = new TST<String>();
 
 	public static void main(String[] args) throws FileNotFoundException {
@@ -16,7 +15,6 @@ public class FrontInterface {
 		readInStopsFile();
 		readInStopTimesFile();
 		newStopTimesList();
-		readInTransfersFile();
 		StopTimes[] stopTimesNeedSorting = new StopTimes[stopTimesValidTimes.size()];
 		stopTimesValidTimes.toArray(stopTimesNeedSorting);
 		StopTimes[] sortedStopTimes = new StopTimes[stopTimesNeedSorting.length];
@@ -49,9 +47,13 @@ public class FrontInterface {
 					String input2 = scanner.nextLine();
 					String stopInput2 = input2.toUpperCase();
 					for (int i = 0; i < busStops.size(); i++) {
-						if ((stopInput1.equals(busStops.get(i).returnStopName()))
-								&& (stopInput1.equals(busStops.get(i).returnStopName()))) {
-
+						if ((stopInput1.equals(busStops.get(i).returnStopId()))
+								&& (stopInput1.equals(busStops.get(i).returnStopId()))) {
+					
+							System.out.print("The shortest path between " + stopInput1 + " and " + stopInput2 + " is: " + ShortestPath.printShortestPath());
+						}
+						else {
+							System.out.println("One of these stops does not exist. Please try again.\n");
 						}
 					}
 				} else if (userInput.equals("2")) {
@@ -176,22 +178,6 @@ public class FrontInterface {
 		}
 	}
 
-	public static void readInTransfersFile() {
-		try {
-			File transfersFile = new File("transfers.txt");
-			Scanner scanner = new Scanner(transfersFile);
-			scanner.nextLine();
-			while (scanner.hasNextLine()) {
-				String inputData = scanner.nextLine();
-				transfers.add(new Transfers(inputData));
-			}
-			scanner.close();
-		} catch (FileNotFoundException e) {
-			System.out.print("Error. This file could not be found.");
-			e.printStackTrace();
-		}
-	}
-
 	// Function that creates a new array list with only valid arrival times in it
 	public static void newStopTimesList() {
 		for (int i = 0; i < stopTimes.size(); i++) {
@@ -276,5 +262,15 @@ public class FrontInterface {
 				System.out.print("\nInvalid format. Make sure to include colons ':' in your input.\n");
 			}
 		}
+	}
+	// Function that finds highest stop number
+	public static int findHighestStopNumber() {
+		int highestNumber = 0;
+		for (int i = 1; i < busStops.size(); i++) {
+			if (busStops.get(i).stop_id > busStops.get(i-1).stop_id) {
+				highestNumber = busStops.get(i).stop_id;
+			}
+		}
+		return highestNumber;
 	}
 }
