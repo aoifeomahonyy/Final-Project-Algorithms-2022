@@ -41,20 +41,20 @@ public class FrontInterface {
 					System.out.println("You are now exiting the system. Thank you! ");
 					break;
 
-				} else if(userInput.equals("1")) {
+				} else if (userInput.equals("1")) {
 					System.out.println("Enter the bus stop you are beginning your journey at: ");
 					String input1 = scanner.nextLine();
 					String stopInput1 = input1.toUpperCase();
 					System.out.println("Enter your destination bus stop: ");
 					String input2 = scanner.nextLine();
 					String stopInput2 = input2.toUpperCase();
-					for(int i = 0; i < busStops.size() i++) {
-						if((stopInput1.equals(busStops.get(i).returnStopName())) && (stopInput1.equals(busStops.get(i).returnStopName()))) {
-							
+					for (int i = 0; i < busStops.size(); i++) {
+						if ((stopInput1.equals(busStops.get(i).returnStopName()))
+								&& (stopInput1.equals(busStops.get(i).returnStopName()))) {
+
 						}
 					}
-				}
-				else if (userInput.equals("2")) {
+				} else if (userInput.equals("2")) {
 					System.out.println("Type your bus stop name: ");
 					if (scanner.hasNextLine()) {
 						String input = scanner.nextLine();
@@ -72,7 +72,7 @@ public class FrontInterface {
 							String stopName = busStopInfo[2];
 							String stopInformation = "\n****************************************\nStop Name: "
 									+ busStopInfo[2] + "\nStop ID: " + busStopInfo[0] + "\nStop Code: " + busStopInfo[1]
-									+ "\nStop Desc: " + busStopInfo[3] + "\nStop Latitude: " + busStopInfo[4]
+									+ "\nStop Description: " + busStopInfo[3] + "\nStop Latitude: " + busStopInfo[4]
 									+ "\nStop Latitude: " + busStopInfo[5] + "\nZone ID: " + busStopInfo[6]
 									+ "\n****************************************\n";
 							ternarySearchTrie.put(stopName, stopInformation);
@@ -83,11 +83,15 @@ public class FrontInterface {
 							outputInfo += s + ternarySearchTrie.get(s) + "\n";
 							count = count + 1;
 						}
-						System.out.println(
-								"We have found " + count + " results for your input '" + input + "':\n" + outputInfo);
 						if (outputInfo.equals("")) {
 							System.out.println("No bus stops could be found. Please try again!\n");
+						} else if (count > 1) {
+							System.out.println("We have found " + count + " results for your input '" + input + "':\n"
+									+ outputInfo);
+						} else {
+							System.out.println("We have found 1 result for your input '" + input + "':\n" + outputInfo);
 						}
+
 					}
 				} else if (userInput.equals("3")) {
 
@@ -245,11 +249,9 @@ public class FrontInterface {
 
 	// returns an error message if an invalid time is inputted
 	public static void invalidUserInputTime(String input) {
-		if(input.length() != 8)
-		{
+		if (input.length() != 8) {
 			System.out.println("\nInvalid time. Make sure to enter in the correct format 'hh:mm:ss'\n");
-		}
-		else if(input.length()==8) {
+		} else if (input.length() == 8) {
 			char h1 = input.charAt(0);
 			char h2 = input.charAt(1);
 			String hoursEntered = "";
@@ -270,8 +272,7 @@ public class FrontInterface {
 			if ((hoursEntered2 > 23) || (minutesEntered2 > 59) || (secondsEntered2 > 59)) {
 				System.out.println("\nInvalid time. Make sure to enter in the correct format 'hh:mm:ss'\n");
 			}
-			if(input.charAt(2)!=':' || input.charAt(5)!=':')
-			{
+			if (input.charAt(2) != ':' || input.charAt(5) != ':') {
 				System.out.print("\nInvalid format. Make sure to include colons ':' in your input.\n");
 			}
 		}
